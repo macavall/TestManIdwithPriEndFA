@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "privmanfunc56fa": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7269",
+      "launchBrowser": false
+    }
+  }
+}
