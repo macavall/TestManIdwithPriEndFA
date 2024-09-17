@@ -7,6 +7,7 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace privmanfunc56fa
@@ -32,12 +33,25 @@ namespace privmanfunc56fa
 
             string blobContent = String.Empty;
 
-#if LOCAL
-            Console.WriteLine("DEBUGDEBUGDEBUGDEBUGDEBUGDEBUGDEBUGDEBUGDEBUGDEBUGDEBUGDEBUGDEBUGDEBUGDEBUGDEBUGDEBUGDEBUGDEBUGDEBUGDEBUGDEBUGDEBUGDEBUGDEBUG");
+            // DNS resolution
+            string domainName = "testprivtest562stor.blob.core.windows.net"; // Replace with the domain name you want to resolve
+            try
+            {
+                _logger.LogInformation($"Resolving domain: {domainName}");
 
-            var blobClient2 = new BlobServiceClient(new Uri(Environment.GetEnvironmentVariable("storConnString")), new ManagedIdentityCredential());
+                // Get the IP addresses for the domain
+                IPAddress[] addresses = Dns.GetHostAddresses(domainName);
 
-            #endif
+                Console.WriteLine("IP Addresses:");
+                foreach (IPAddress address in addresses)
+                {
+                    _logger.LogInformation(address.ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation($"Error resolving DNS: {ex.Message}");
+            }
 
 
 
@@ -82,13 +96,17 @@ namespace privmanfunc56fa
                         resultStr += "Read Complete!!!\n";
 
                         Console.WriteLine("Blob content:");
+                        _logger.LogInformation("Blob content:");
                         Console.WriteLine(blobContent);
+                        _logger.LogInformation(blobContent);
                     }
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine($"Error reading blob: {ex.Message}");
+                    _logger.LogInformation($"Error reading blob: {ex.Message}");
                     Console.WriteLine($"Error reading blob: {ex.StackTrace}");
+                    _logger.LogInformation($"Error reading blob: {ex.StackTrace}");
 
                     return new OkObjectResult(resultStr);
                 }
@@ -96,7 +114,9 @@ namespace privmanfunc56fa
             catch (Exception ex)
             {
                 Console.WriteLine($"Creating Blob Client Exception: {ex.Message}");
+                _logger.LogInformation($"Creating Blob Client Exception: {ex.Message}");
                 Console.WriteLine($"Creating Blob Client Exception: {ex.StackTrace}");
+                _logger.LogInformation($"Creating Blob Client Exception: {ex.StackTrace}");
 
                 return new OkObjectResult(resultStr);
             }
