@@ -28,4 +28,7 @@
   <ItemGroup>
     <Using Include="System.Threading.ExecutionContext" Alias="ExecutionContext" />
   </ItemGroup>
+	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+		<DefineConstants>DEBUG;LOCAL</DefineConstants>
+	</PropertyGroup>
 </Project>
